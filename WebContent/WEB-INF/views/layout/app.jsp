@@ -12,26 +12,49 @@
         <div id="wrapper">
             <div id="header">
                 <div id="header_menu">
-                    <h1><a href="<c:url value='/' />">日報管理システム</a></h1>&nbsp;&nbsp;&nbsp;
+
+                    <div class="header_left_content_wrapper">
+                        <div id="header_title">
+                            <h1><a href="<c:url value='/' />">日報管理システム</a></h1>
+                        </div>
+                    </div>
+
                     <c:if test="${sessionScope.login_employee != null}">
+
+                        <div class="header_left_content_wrapper">
+                            <div class="header_menu_caption">メニュー</div>
+                            <div class="header_menu_contents">
+                                <span class="header_menu_content"><a href="<c:url value='/reports/new' />">新規日報</a></span>
+                                <span class="header_menu_content"><a href="<c:url value='/reports/index' />">日報一覧</a></span>
+                                <span class="header_menu_content"><a href="<c:url value='/follows/index' />">フォロー</a></span>
+                            </div>
+                        </div>
+
                         <c:if test="${sessionScope.login_employee.admin_flag == 1}">
-                            <a href="<c:url value='/employees/index' />">従業員管理</a>&nbsp;
+                            <div class="header_left_content_wrapper">
+                                <div class="header_menu_caption">管理者メニュー</div>
+                                <div class="header_menu_contents">
+                                    <span class="header_menu_content"><a href="<c:url value='/employees/new' />">新規従業員の登録</a></span>
+                                    <span class="header_menu_content"><a href="<c:url value='/employees/index' />">従業員管理</a></span>
+                                </div>
+                            </div>
                         </c:if>
-                        <a href="<c:url value='/reports/index' />">日報管理</a>&nbsp;
+
+                        <div class="header_right_content_wrapper">
+                            <div class="header_menu_caption"><c:out value="${sessionScope.login_employee.name}" />&nbsp;さん</div>
+                            <div class="header_menu_contents">
+                                <span class="header_menu_content"><a href="<c:url value='/logout' />">ログアウト</a></span>
+                            </div>
+                        </div>
+
                     </c:if>
                 </div>
-                <c:if test="${sessionScope.login_employee != null}">
-                    <div id="employee_name">
-                        <c:out value="${sessionScope.login_employee.name}" />&nbsp;さん&nbsp;&nbsp;&nbsp;
-                        <a href="<c:url value='/logout' />">ログアウト</a>
-                    </div>
-                </c:if>
             </div>
             <div id="content">
                 ${param.content}
             </div>
             <div id="footer">
-                by Shota Sekino.
+                Daily Report System ver. 2019.05.15 produced by Shota Sekino.
             </div>
         </div>
     </body>

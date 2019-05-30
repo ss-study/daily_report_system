@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import models.Employee;
 import models.Report;
 import utils.DBUtil;
+import utils.Page;
 
 /**
  * Servlet implementation class TopPageIndexServlet
@@ -22,28 +23,21 @@ import utils.DBUtil;
 public class TopPageIndexServlet extends HttpServlet {
         private static final long serialVersionUID = 1L;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public TopPageIndexServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        EntityManager em = DBUtil.createEntityManager();
 
+        // ページ数取得
+        Integer page = new Page().setPage(request.getParameter("page")).toInteger();
+
+        // ログイン中の社員取得
         Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
 
-        int page;
-        try{
-            page = Integer.parseInt(request.getParameter("page"));
-        } catch(Exception e) {
-            page = 1;
-        }
+        // DBアクセス
+        EntityManager em = DBUtil.createEntityManager();
+
         List<Report> reports = em.createNamedQuery("getMyAllReports", Report.class)
                                   .setParameter("employee", login_employee)
                                   .setFirstResult(15 * (page - 1))
@@ -54,19 +48,28 @@ public class TopPageIndexServlet extends HttpServlet {
                                      .setParameter("employee", login_employee)
                                      .getSingleResult();
 
+        List<Report> followReports = em.createNamedQuery("getFollowReports", Report.class)
+                .setParameter("employee_id", login_employee.getId())
+                .setMaxResults(15)
+                .getResultList();
+
         em.close();
 
+        // アトリビュート設定
         request.setAttribute("reports", reports);
         request.setAttribute("reports_count", reports_count);
         request.setAttribute("page", page);
+        request.setAttribute("follow_reports", followReports);
 
         if(request.getSession().getAttribute("flush") != null) {
             request.setAttribute("flush", request.getSession().getAttribute("flush"));
             request.getSession().removeAttribute("flush");
         }
 
+        // フォワード
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/topPage/index.jsp");
         rd.forward(request, response);
+
     }
 
 }

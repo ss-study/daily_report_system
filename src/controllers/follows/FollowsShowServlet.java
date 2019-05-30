@@ -1,6 +1,7 @@
-package controllers.employees;
+package controllers.follows;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.RequestDispatcher;
@@ -12,37 +13,37 @@ import javax.servlet.http.HttpServletResponse;
 
 import models.Employee;
 import utils.DBUtil;
-import utils.Page;
 
 /**
- * Servlet implementation class EmployeesShowServlet
+ * Servlet implementation class FollowsShowServlet
  */
-@WebServlet("/employees/show")
-public class EmployeesShowServlet extends HttpServlet {
+@WebServlet("/follows/show")
+public class FollowsShowServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public EmployeesShowServlet() {
+    public FollowsShowServlet() {
         super();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        // ページ数取得
-        Integer page = new Page().setPage(request.getParameter("page")).toInteger();
+        // ログイン中の社員取得
+        Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
 
         // DBアクセス
         EntityManager em = DBUtil.createEntityManager();
-        Employee e = em.find(Employee.class, Integer.parseInt(request.getParameter("id")));
+        List<Employee> employees = em.createNamedQuery("getFollowEmployees", Employee.class)
+                                    .setParameter("employee_id", login_employee.getId())
+                                    .getResultList();
         em.close();
 
         // アトリビュート設定
-        request.setAttribute("employee", e);
-        request.setAttribute("page", page);
-        request.setAttribute("_token", request.getSession().getId());
+        request.setAttribute("employees", employees);
 
         // フォワード
-        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/show.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/follows/show.jsp");
         rd.forward(request, response);
+
     }
 
 }

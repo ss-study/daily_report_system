@@ -7,43 +7,27 @@ body {
 
 #header {
     width: 100%;
-    color: #eeeeee;
+    height: 70px;
     background-color: #333333;
 }
 
 #header_menu {
-    width: 100%;
-    padding-top: 12px;
-    padding-bottom: 5px;
+    width: 57%;
+    padding-top: 17px;
+    padding-left: 3%;
     display: inline-block;
 }
 
-.header_left_content_wrapper {
-    padding: 0 10px;
-    float: left;
-}
-
-.header_right_content_wrapper {
-    padding: 0 10px;
-    float: right;
-}
-
 #header_title {
-    padding: 12px 20px;
+    padding: ;
 }
 
-#header .header_menu_caption {
-    padding-left: 5px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid white;
-}
-
-#header .header_menu_contents {
-    padding-top: 5px;
-}
-
-#header .header_menu_content {
-    padding: 0 5px;
+#employee_name {
+    color: #cccccc;
+    width: 36%;
+    padding-right: 3%;
+    text-align: right;
+    display: inline-block;
 }
 
 #header a {

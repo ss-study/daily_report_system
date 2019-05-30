@@ -5,7 +5,7 @@
     <c:param name="content">
         <c:choose>
             <c:when test="${employee != null}">
-                <h2>id : ${employee.id} の従業員情報　詳細ページ</h2>
+                <h2>id : ${employee.id} の従業員情報 詳細ページ</h2>
 
                 <table>
                     <tbody>
@@ -41,13 +41,13 @@
                     </tbody>
                 </table>
 
-                <p><a href="<c:url value='/employees/edit?id=${employee.id}' />">この従業員情報を編集する</a></p>
+                <p><a href="<c:url value='/employees/edit?id=${employee.id}&page=${page}' />">この従業員情報を編集する</a></p>
             </c:when>
             <c:otherwise>
                 <h2>お探しのデータは見つかりませんでした。</h2>
             </c:otherwise>
         </c:choose>
 
-        <p><a href="<c:url value='/employees/index' />">一覧に戻る</a></p>
+        <p><a href="<c:url value='/employees/index?page=${page}' />">一覧に戻る</a></p>
     </c:param>
 </c:import>

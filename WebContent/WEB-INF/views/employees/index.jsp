@@ -7,7 +7,7 @@
                 <c:out value="${flush}"></c:out>
             </div>
         </c:if>
-        <h2>従業員　一覧</h2>
+        <h2>従業員 一覧</h2>
         <table id="employee_list">
             <tbody>
                 <tr>
@@ -25,7 +25,7 @@
                                     （削除済み）
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="<c:url value='/employees/show?id=${employee.id}' />">詳細を表示</a>
+                                    <a href="<c:url value='/employees/show?id=${employee.id}&page=${page}' />">詳細を表示</a>
                                 </c:otherwise>
                             </c:choose>
                         </td>
@@ -47,7 +47,6 @@
                 </c:choose>
             </c:forEach>
         </div>
-        <p><a href="<c:url value='/employees/new' />">新規従業員の登録</a></p>
 
     </c:param>
 </c:import>

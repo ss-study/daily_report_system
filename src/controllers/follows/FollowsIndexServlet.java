@@ -1,4 +1,4 @@
-package controllers.reports;
+package controllers.follows;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,18 +11,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import models.Employee;
 import models.Report;
 import utils.DBUtil;
 import utils.Page;
 
 /**
- * Servlet implementation class ReportsIndexServlet
+ * Servlet implementation class FollowsIndexServlet
  */
-@WebServlet("/reports/index")
-public class ReportsIndexServlet extends HttpServlet {
+@WebServlet("/follows/index")
+public class FollowsIndexServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public ReportsIndexServlet() {
+    public FollowsIndexServlet() {
         super();
     }
 
@@ -31,14 +32,19 @@ public class ReportsIndexServlet extends HttpServlet {
         // ページ数取得
         Integer page = new Page().setPage(request.getParameter("page")).toInteger();
 
+        // ログイン中の社員取得
+        Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
+
         // DBアクセス
         EntityManager em = DBUtil.createEntityManager();
-        List<Report> reports = em.createNamedQuery("getAllReports", Report.class)
-                                    .setFirstResult(15 * (page - 1))
-                                    .setMaxResults(15)
-                                    .getResultList();
-        long reports_count = (long)em.createNamedQuery("getReportsCount", Long.class)
-                                    .getSingleResult();
+        List<Report> reports = em.createNamedQuery("getFollowReports", Report.class)
+                                .setParameter("employee_id", login_employee.getId())
+                                .setFirstResult(15 * (page - 1))
+                                .setMaxResults(15)
+                                .getResultList();
+        long reports_count = (long)em.createNamedQuery("getFollowReportsCount", Long.class)
+                                .setParameter("employee_id", login_employee.getId())
+                                .getSingleResult();
         em.close();
 
         // アトリビュート設定
@@ -51,7 +57,7 @@ public class ReportsIndexServlet extends HttpServlet {
         }
 
         // フォワード
-        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/index.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/follows/index.jsp");
         rd.forward(request, response);
 
     }

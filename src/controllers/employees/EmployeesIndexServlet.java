@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import models.Employee;
 import utils.DBUtil;
+import utils.Page;
 
 /**
  * Servlet implementation class EmployeesIndexServlet
@@ -21,24 +22,18 @@ import utils.DBUtil;
 public class EmployeesIndexServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public EmployeesIndexServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        // ページ数取得
+        Integer page = new Page().setPage(request.getParameter("page")).toInteger();
+
+        // DBアクセス
         EntityManager em = DBUtil.createEntityManager();
 
-        int page = 1;
-        try{
-            page = Integer.parseInt(request.getParameter("page"));
-        } catch(NumberFormatException e) { }
         List<Employee> employees = em.createNamedQuery("getAllEmployees", Employee.class)
                                      .setFirstResult(15 * (page - 1))
                                      .setMaxResults(15)
@@ -49,6 +44,7 @@ public class EmployeesIndexServlet extends HttpServlet {
 
         em.close();
 
+        // アトリビュート設定
         request.setAttribute("employees", employees);
         request.setAttribute("employees_count", employees_count);
         request.setAttribute("page", page);
@@ -57,6 +53,7 @@ public class EmployeesIndexServlet extends HttpServlet {
             request.getSession().removeAttribute("flush");
         }
 
+        // フォワード
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/index.jsp");
         rd.forward(request, response);
     }
